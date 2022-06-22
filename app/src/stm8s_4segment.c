@@ -1,4 +1,3 @@
-
 #include "stm8s_4segment.h"
 
 /* -------------------------------------------------------------------------------------------*/
@@ -36,8 +35,6 @@ char numbers_with_dot[12] =
         0b01111111  // NOTHING
 };
 
-uint32_t pockej = 10;
-
 #define dgt_1_port GPIOB
 #define dgt_2_port GPIOD
 #define dgt_3_port GPIOE
@@ -51,7 +48,7 @@ void display_init(void)
   GPIO_Init(dgt_4_port, PIN_ALL, GPIO_MODE_OUT_PP_HIGH_SLOW);
 }
 
-//
+/* -------------------------------------------------------------------------------------------*/
 void display_sep(uint32_t display)
 {
   uint32_t temp1 = (display / 1000);       // thousands
@@ -63,51 +60,61 @@ void display_sep(uint32_t display)
 
   // první idigt
   GPIO_Write(dgt_1_port, numbers[displayed_numbers[0]]);
-  delay.us(pockej);
 
   // druhý digit
   GPIO_Write(dgt_2_port, numbers_with_dot[displayed_numbers[1]]);
-  delay.us(pockej);
 
   // třetí digit
   GPIO_Write(dgt_3_port, numbers[displayed_numbers[2]]);
-  delay.us(pockej);
 
   // čtvrtý digit
   GPIO_Write(dgt_4_port, numbers[displayed_numbers[3]]);
-  delay.us(pockej);
 }
-/* -------------------------------------------------------------------------------------------*/
 
+/* -------------------------------------------------------------------------------------------*/
 void display_num(uint32_t cislo2, uint32_t cislo1, uint32_t sec1, uint32_t milisec1)
 {
-  // první idigt
+  // první digit
   GPIO_Write(dgt_1_port, numbers[cislo2]);
-  delay.us(pockej);
 
   // druhý digit
   GPIO_Write(dgt_2_port, numbers_with_dot[cislo1]);
-  delay.us(pockej);
 
   // třetí digit
   GPIO_Write(dgt_3_port, numbers[sec1]);
-  delay.us(pockej);
 
   // čtvrtý digit
   GPIO_Write(dgt_4_port, numbers[milisec1]);
-  delay.us(pockej);
 }
 /* -------------------------------------------------------------------------------------------*/
+void display_min_sec(uint32_t minuty, uint32_t sekundy)
+{
+  // Převod zadaných čísla na desítky a jednotky
+  uint32_t temp1 = ((sekundy / 10) % 10); // tens
+  uint32_t temp2 = (sekundy % 10);        // unit
 
+  // první idigt
+  GPIO_Write(dgt_1_port, numbers[temp1]);
+
+  // druhý digit
+  GPIO_Write(dgt_2_port, numbers_with_dot[temp2]);
+
+  // Převod zadaných čísla na desítky a jednotky
+  uint32_t temp3 = ((sekundy / 10) % 10); // tens
+  uint32_t temp4 = (sekundy % 10);        // unit
+  // třetí digit
+  GPIO_Write(dgt_3_port, numbers[temp3]);
+
+  // čtvrtý digit
+  GPIO_Write(dgt_4_port, numbers[temp4]);
+}
+/* -------------------------------------------------------------------------------------------*/
+// Vytvoření konstat aby bylo možné zadat display.init() a nemuselo se psát display_init()
 const Segment_module display = {
     .init = display_init,
     .write = display_sep,
     .num = display_num,
+    .clock = display_min_sec,
 };
-/* -------------------------------------------------------------------------------------------*/
-
-/**
- * @}
- */
 
 /*****************************END OF FILE****/
