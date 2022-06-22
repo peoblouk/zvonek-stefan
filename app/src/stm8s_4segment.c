@@ -26,12 +26,12 @@ char numbers_with_dot[12] =
         0b00100100, // 2
         0b00110000, // 3
         0b00011001, // 4
-        0b00010010, // 5
-        0b00000010, // 6
+        0b10010000, // 5
+        0b10000000, // 6
         0b01111000, // 7
         0b00000000, // 8
         0b00010000, // 9
-        0b00111111, // -
+        0b10111101, // -
         0b01111111  // NOTHING
 };
 
@@ -90,8 +90,8 @@ void display_num(uint32_t cislo2, uint32_t cislo1, uint32_t sec1, uint32_t milis
 void display_min_sec(uint32_t minuty, uint32_t sekundy)
 {
   // Převod zadaných čísla na desítky a jednotky
-  uint32_t temp1 = ((sekundy / 10) % 10); // tens
-  uint32_t temp2 = (sekundy % 10);        // unit
+  uint32_t temp1 = ((minuty / 10) % 10); // tens
+  uint32_t temp2 = (minuty % 10);        // unit
 
   // první idigt
   GPIO_Write(dgt_1_port, numbers[temp1]);
